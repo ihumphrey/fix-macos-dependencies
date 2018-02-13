@@ -17,7 +17,7 @@ for root, dirs, files in os.walk(path):
     for f in files:
         executable, ext = os.path.splitext(f)
         # Check to see that the file is a binary and is not a symlink
-        if ext == "" and not os.islink(executable):
+        if ext == "" and not os.path.islink(executable):
             print "Processing {}...".format(executable)
             otool_L_cmd = ["otool", "-L", executable]
             otool_L_cmd_output = subprocess.check_output(otool_L_cmd)
