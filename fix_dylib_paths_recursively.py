@@ -64,7 +64,12 @@ for root, dirs, files in os.walk(path):
                 if DEBUG:
                     install_name_tool_cmd.insert(0, "echo")
 
-                install_name_tool_cmd_output = subprocess.check_output(install_name_tool_cmd)
+                try:
+                    install_name_tool_cmd_output = subprocess.check_output(install_name_tool_cmd)
+                except subprocess.CalledProcessError as e:
+                    print "\tWARNING -- skipping {}".format(executable)
+                    print "\t\tCMD: {}".format(install_name_tool_cmd)
+                    print "\t\tMSG: {}".format(repr(e))
                 if DEBUG:
                     print "\tinstall_name_tool cmd: {}".format(install_name_tool_cmd_output)
 
@@ -86,7 +91,13 @@ for root, dirs, files in os.walk(path):
                     if DEBUG:
                         install_name_tool_cmd.insert(0, "echo")
 
-                    install_name_tool_cmd_output = subprocess.check_output(install_name_tool_cmd)
+                    try:
+                        install_name_tool_cmd_output = subprocess.check_output(install_name_tool_cmd)
+                    except subprocess.CalledProcessError as e:
+                        print "\tWARNING -- skipping {}".format(executable)
+                        print "\t\tCMD: {}".format(install_name_tool_cmd)
+                        print "\t\tMSG: {}".format(repr(e))
+
                     if DEBUG:
                         print "\tinstall_name_tool cmd: {}".format(install_name_tool_cmd_output)
 
