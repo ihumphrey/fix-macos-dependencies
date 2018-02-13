@@ -2,39 +2,51 @@ import os
 import subprocess
 import sys
 
-def process_files(files):
-    DEBUG = True
+DEBUG = True
+VERBOSE = False
+
+path = sys.argv[1]
+
+print "path:  {}".format(path)
+for root, dirs, files in os.walk(path):
+    if VERBOSE:
+        print "root:  {}".format(root)
+        print "dirs:  {}".format(dirs)
+        print "files: {}".format(files)
+
     for f in files:
         executable, ext = os.path.splitext(f)
-        # Only work on binary (executable) files
-        if ext == "":
-            print "Processing %s" % executable
-            # Run otool -L and -D on each file
-            otool_L = subprocess.check_output(["otool", "-L", executable])
-            # otool_D = subprocess.check_output(["otool", "-D", executable])
+        # Check to see that the file is a binary and is not a symlink
+        if ext == "" and not os.islink(executable):
+            print "Processing {}...".format(executable)
+            otool_L_cmd = ["otool", "-L", executable]
+            otool_L_cmd_output = subprocess.check_output(otool_L_cmd)
+            if VERBOSE:
+                print "otool -L : {}".format(otool_L_cmd_output)
+
             # Split the otool -L by newlines
-            libs = otool_L.splitlines()
-            for s in libs:
-                # Replace any "v006" with "v007"
-                if "v006" in s:
-                    lib = s.split(' ')[0].strip()
-                    if DEBUG:
-                        print "\t{}".format(lib)
-                        print "\t{}".format(lib.replace("v006", "v007"))
-                        # print "otool -D: {}".format(otool_D)
-                    newlib = lib.replace("v006", "v007")
+            v00x_dependencies = otool_L_cmd_output.splitlines()
+            old_v00x = "v006"
+            new_v00x = "v007"
+            for dependency in v00X_dependencies:
+                # Replace old v00x with new v00x
+                if old_v00x in dependency:
+                    # Format of otool -L: dependency (extraneous info)
+                    lib = dependency.split(' ')[0].strip()
+                    newlib = lib.replace(old_v00x, new_v00x)
+                    print "\told dependency: {}".format(lib)
+                    print "\tnew dependency: {}".format(newlib)
+
                     install_name_tool_cmd = ["install_name_tool", "-change", lib, newlib, executable]
                     if DEBUG:
                         install_name_tool_cmd.insert(0, "echo")
-                    try:
-                        change_path = subprocess.check_output(install_name_tool_cmd)
-		        print "CMD: {}".format(change_path)
-                    except CalledProcessError as e:
-                        print "Error running the following command: "
-                        print "\t{}".format(install_name_tool_cmd)
-                        print "\tERROR: {}".format(e.strerror)
+
+                    install_name_tool_cmd_output = subprocess.check_output(install_name_tool_cmd)
+                    if DEBUG:
+                        print "\tinstall_name_tool cmd: {}".format(install_name_tool_cmd_ouput)
+
+                    otool_L_cmd_output = subprocess.check_output(otool_L_cmd)
+                    print "otool -L: {}".format(otool_L_cmd_output)
             print ""
-
-
-if __name__ == '__main__':
-    process_files(sys.argv[1:])
+            print "-"*80
+            print ""
