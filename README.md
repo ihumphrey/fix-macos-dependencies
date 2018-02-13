@@ -12,6 +12,9 @@ This will change any binary symlinks from v006 to v007 (ports/libexec/gnubin/)
 
 2. Run the fix_binary_paths_recursively.py script on the path you want to fix binaries for:
 This will change any binary executable dependencies from v006 to v007.
-  * e.g. cd /opt/usgs/v007_fix; sudo python fix_binary_paths_recursively.py ports
+  * cd /opt/usgs/v007_fix
+  * sudo python fix_binary_paths_recursively.py 3rdParty
+  * sudo python fix_binary_paths_recursively.py ports
+  * sudo python fix_binary_paths_recursively.py tools
 
 3. Fix the .dylib dependencies
