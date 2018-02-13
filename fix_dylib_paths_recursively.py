@@ -49,7 +49,12 @@ for root, dirs, files in os.walk(path):
             new_v00x = "v007"
 
             # Split the otool -D (format is libname:\n id)
-            lib_id = otool_D_cmd_output.splitlines()[1]
+            lib_id = otool_D_cmd_output.splitlines()
+            # Check to see if dylib has an id set, and modify it if it does and has old v00x
+            if len(lib_id) == 2:
+                lib_id = lib_id[1]
+            else:
+                continue
             if old_v00x in lib_id:
                 new_id = lib_id.replace(old_v00x, new_v00x)
                 print "\told id: {}".format(lib_id)
