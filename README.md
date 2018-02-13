@@ -51,3 +51,25 @@ sudo python fix_dylib_paths_recursively.py proprietary >>& out.log
 sudo python fix_dylib_paths_recursively.py ports >>& out.log
 sudo python fix_dylib_paths_recursively.py tools >>& out.log
 ```
+
+1. Verifying the changes
+
+You have made changes to /opt/usgs/v007_fix.
+***Temporarily***:
+
+```
+ssh isis3mgr@prog26
+cd /opt/usgs
+mv v006 v006_BACKUP
+mv v007 v007_BACKUP
+mv v007_fix v007
+exit
+
+ssh prog26
+cd /work/users/<your-name>
+mkdir test_v007_fix && cd test_v007_fix
+git clone git@github.com:<username>/ISIS3.git 
+cd ISIS3/isis
+sic
+<build>
+```
