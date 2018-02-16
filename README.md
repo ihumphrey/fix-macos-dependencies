@@ -13,6 +13,8 @@ the script, change DEBUG to False.***
 ***Please note that to fix the qt5 and qtw framworks, modify fix_dylib_paths_recursively.py
 to check ext == ""***
 
+***ISSUES: does not handle liblevel.dylib.1.18 type dylib's (it looks for .dylib and NOT symlinks)***
+
 1. Run the fix_sym_links.py script on the path you want to fix (recursive).
 This will change any binary symlinks from v006 to v007 (ports/libexec/gnubin/)
 
